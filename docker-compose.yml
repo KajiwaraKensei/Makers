@@ -1,0 +1,48 @@
+version: "3"
+services:
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    ports:
+      - 27017:27017
+    command:
+      - mongod
+
+  mongo_seed:
+    build: mongo_seed
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+
+  backend:
+    container_name: backend
+    build: ./backend
+    environment:
+      - NODE_ENV=production
+      - MONGO_DATABASE=mongodb://mongodb/myapp
+    ports:
+      - "8080:3000"
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+    volumes:
+      - ./src/backend/dist:/home/node/dist
+    command: yarn start
+
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - "8888:3000"
+    volumes:
+      - ./src/frontend/:/home/node
+      - node_modules:/home/node/node_modules
+    command: [sh, -c, yarn build && yarn start]
+
+volumes:
+  node_modules:
+    driver: "local"

@@ -3,8 +3,9 @@
 const path = require("path");
 const withCSS = require("@zeit/next-css");
 const Dotenv = require("dotenv-webpack");
+const withPWA = require("next-pwa");
 
-module.exports = withCSS({
+module.exports = withPWA({
   webpack(config, options) {
     config.plugins = config.plugins || [];
     config.plugins = [

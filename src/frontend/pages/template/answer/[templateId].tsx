@@ -26,12 +26,15 @@ const App: NextPage<Props> = props => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { backAnswer } = useSelector(selector)
-  const { templateId } = router.query
-  React.useEffect(() => {
+  const { templateId } = router.query;
+
+  React.useEffect(async () => {
     if (backAnswer) {
       dispatch(actionCreator.template.setBackAnswer(false))
     } else {
-      dispatch(actionCreator.loading.startLoading("template"))
+      dispatch(actionCreator.loading.startLoading("template"));
+      axios.post("/template/execution", { id: templateId }).then(() => { });
+
       axios.post("/template/get", { templateId }).then(res => {
         if (res.data.success) {
           const { questions, memo, title, template, tags, } = res.data;

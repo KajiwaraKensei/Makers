@@ -5,9 +5,11 @@ import React from "react";
 import * as Next from "next";
 import styled from "styled-components";
 import TextField from '@material-ui/core/TextField';
-import { Typography, Button } from "@material-ui/core"
+import { Typography, Button, IconButton, Tooltip } from "@material-ui/core"
 import TwitterIcon from '@material-ui/icons/Twitter';
 import ModeCommentOutlinedIcon from '@material-ui/icons/ModeCommentOutlined';
+import CopyToClipBoard from 'react-copy-to-clipboard';
+import AssignmentIcon from "@material-ui/icons/Assignment"
 // ______________________________________________________
 //　型定義
 
@@ -22,7 +24,9 @@ type Props = {
 const Component: Next.NextComponentType<Next.NextPageContext, {}, Props> = (props: Props) => {
   const { result } = props;
   const [string, setString] = React.useState<string>(result);
-  const encodeString = React.useMemo(() => encodeURI(string), [string])
+  const encodeString = React.useMemo(() => encodeURI(string), [string]);
+  const [openTip, setOpenTip] = React.useState<boolean>(false);
+
   const doChange = e => {
     setString(e.target.value as string)
   };
@@ -30,7 +34,13 @@ const Component: Next.NextComponentType<Next.NextPageContext, {}, Props> = (prop
   React.useEffect(() => {
     setString(result)
   }, [result]);
+  const handleCloseTip = (): void => {
+    setOpenTip(false);
+  };
 
+  const handleClickButton = (): void => {
+    setOpenTip(true);
+  };
   return (
     <div className={props.className} >
       <Typography variant="h6" className="result-heading"><i className="fas fa-compact-disc result-text-icon" />結果</Typography>
@@ -42,10 +52,29 @@ const Component: Next.NextComponentType<Next.NextPageContext, {}, Props> = (prop
         value={string}
         onChange={doChange}
       />
+      <Tooltip
+        arrow
+        open={openTip}
+        onClose={handleCloseTip}
+        disableHoverListener
+        placement='right'
+        title='コピーしました!'
+      >
+        <CopyToClipBoard text={string}>
 
+          <IconButton
+            disabled={string === ''}
+            onClick={handleClickButton}
+          >
+            <AssignmentIcon />
+            <Typography variant="caption" >
+              コピー
+            </Typography>
 
+          </IconButton>
+        </CopyToClipBoard>
+      </Tooltip>
       <div className="sns-share">
-
         <Typography variant="h6" className="result-heading"><i className="fas fa-share-alt-square" />SNSで送信</Typography>
         <a href={"https://twitter.com/intent/tweet?text=" + encodeString} rel="noopener noreferrer" target="_blank">
           <Button

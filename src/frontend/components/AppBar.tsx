@@ -60,6 +60,8 @@ const Component: Next.NextComponentType<Next.NextPageContext, {}, Props> = (prop
     })
   }, [])
   React.useEffect(() => {
+    dispatch(actionCreator.window.setWindowWidth(1000))
+    dispatch(actionCreator.window.setWindowWidth(0))
     dispatch(actionCreator.window.setWindowWidth(window.innerWidth))
   }, [])
   const handleResize = () => {

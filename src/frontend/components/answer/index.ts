@@ -11,3 +11,5 @@ export {
   AnswerQuickItem,
   AnswerResult
 };
+
+export default AnswerPage

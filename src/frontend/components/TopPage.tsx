@@ -37,6 +37,9 @@ const StyledComponent = styled(Component)`
   height: 100%;
   color: #fff;
   display: flex;
+  @media only screen and (max-width: 768px){
+    display: block;
+  } 
 `
 
 interface CardProps {
